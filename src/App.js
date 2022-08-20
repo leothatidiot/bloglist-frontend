@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -12,6 +13,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -41,6 +44,8 @@ const App = () => {
       )
     } catch (exception) {
       console.log(exception)
+      setMessage('wrong username or password')
+      setTimeout(() => {setMessage('')}, 5000);
     }
   }
 
@@ -63,6 +68,9 @@ const App = () => {
 
     blogService.create(blogJSON)
 
+    setMessage(`a new blog "${title}" by "${author}" added`)
+    setTimeout(() => {setMessage('')}, 5000);
+
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -72,11 +80,16 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+
+        {
+          message !== '' && <Notification message={message} />
+        }
+
         <form onSubmit={handleLogin}>
           <div>
             username
-            <input type="text" value={username} name="Username" 
-              onChange={ ({target}) => {setUsername(target.value)} }
+            <input type="text" value={username} name="Username"
+              onChange={({ target }) => { setUsername(target.value) }}
             />
           </div>
           <div>
@@ -94,6 +107,11 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+
+      {
+        message !== '' && <Notification message={message}/>
+      }
+
       <form onSubmit={handleLogout}>
         <div>
           {user.username} logged in
