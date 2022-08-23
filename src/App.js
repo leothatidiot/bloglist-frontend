@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
+import CreateForm from './components/CreateForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -9,10 +11,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   const [message, setMessage] = useState('')
 
@@ -53,27 +51,7 @@ const App = () => {
     event.preventDefault()
 
     window.localStorage.clear()
-    // window.location.reload()
     setUser(null)
-  }
-
-  const handleCreate = async (event) => {
-    event.preventDefault()
-
-    const blogJSON = {
-      title: title,
-      author: author,
-      url: url,
-    }
-
-    blogService.create(blogJSON)
-
-    setMessage(`a new blog "${title}" by "${author}" added`)
-    setTimeout(() => {setMessage('')}, 5000);
-
-    setTitle('')
-    setAuthor('')
-    setUrl('')
   }
 
   if (user === null) {
@@ -118,29 +96,10 @@ const App = () => {
           <button type="submit">logout</button>
         </div>
       </form>
-
-      <h2>create new</h2>
-      <form onSubmit={handleCreate}>
-        <div>
-          title:
-          <input type="text" value={title} name="Title"
-            onChange={({ target }) => { setTitle(target.value) }}
-          />
-        </div>
-        <div>
-          author:
-          <input type="text" value={author} name="Author"
-            onChange={({ target }) => { setAuthor(target.value) }}
-          />
-        </div>
-        <div>
-          url:
-          <input type="text" value={url} name="Url"
-            onChange={({ target }) => { setUrl(target.value) }}
-          />
-        </div>
-        <button >create</button>
-      </form>
+      
+      <Togglable expandButtonLable='create new blog' collapseButtonLable='cancel'>
+        <CreateForm setMessage={setMessage}></CreateForm>
+      </Togglable>
 
       <div>
         {blogs.map(blog =>

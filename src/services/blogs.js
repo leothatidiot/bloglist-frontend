@@ -17,7 +17,6 @@ const create = async (blogJSON) => {
     headers: { Authorization: token },
   }
   await axios.post(baseUrl, blogJSON, config)
-
 }
 
 export default { getAll, create, setToken }
