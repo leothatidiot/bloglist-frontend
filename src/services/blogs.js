@@ -19,4 +19,11 @@ const create = async (blogJSON) => {
   await axios.post(baseUrl, blogJSON, config)
 }
 
-export default { getAll, create, setToken }
+const update = async (blogId, blogJSON) => {
+  const config = { // authorization in backend did NOT implement
+    headers: { Authorization: token },
+  }
+  await axios.put(`${baseUrl}/${blogId}`, blogJSON, config)
+}
+
+export default { setToken, getAll, create, update }
