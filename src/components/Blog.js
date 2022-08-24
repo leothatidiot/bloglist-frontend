@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import blogService from "../services/blogs"
 
 const Blog = ({ blog, setBlogs }) => {
@@ -21,10 +21,16 @@ const Blog = ({ blog, setBlogs }) => {
     newBlog.likes += 1
     delete newBlog.user
 
-    console.log(blog)
+    await blogService.update(blog.id, newBlog)
 
-    blogService.update(blog.id, newBlog)
-    blogService.getAll().then(blogs => { setBlogs(blogs) })
+    blogService.getAll().then(blogs => {
+      blogs.sort((a, b) => {
+        if (a.likes < b.likes) return 1
+        else if (a.likes > b.likes) return -1
+        else return 0
+      })
+      setBlogs(blogs)
+    })
   }
 
   return (
