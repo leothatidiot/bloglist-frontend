@@ -17,7 +17,7 @@ const Blog = ({ blog, setBlogs }) => {
   }
 
   const clickLike = async () => {
-    const newBlog = await {...blog}
+    const newBlog = await { ...blog }
     newBlog.likes += 1
     delete newBlog.user
 
@@ -33,27 +33,54 @@ const Blog = ({ blog, setBlogs }) => {
     })
   }
 
+  const clickRemove = async () => {
+    if (window.confirm(`Remove blog "${blog.title}" by "${blog.author}"`)) {
+      await blogService.remove(blog.id)
+      blogService.getAll().then(blogs => {
+        blogs.sort((a, b) => {
+          if (a.likes < b.likes) return 1
+          else if (a.likes > b.likes) return -1
+          else return 0
+        })
+        setBlogs(blogs)
+      })
+    }
+  }
+
   return (
-    detailVisible ? 
-    
-    <div style={blogStyle}>
-      <div>
-        {blog.title} {blog.author}
-        <button onClick={toggledetailVisible}>view</button>
-      </div>
-      <div>{blog.url}</div>
-      <div>{blog.likes} <button onClick={clickLike}>like</button></div>
-      <div>{blog.user.name}</div>
-    </div>
+    detailVisible ?
 
-    :
+      <div style={blogStyle}>
+        <div>
+          {blog.title} {blog.author}
+          <button onClick={toggledetailVisible}>view</button>
+        </div>
+        <div>{blog.url}</div>
+        <div>{blog.likes} <button onClick={clickLike}>like</button></div>
+        <div>{blog.user.name}</div>
 
-    <div style={blogStyle}>
-      <div>
-        {blog.title} {blog.author}
-        <button onClick={toggledetailVisible}>view</button>
+        {
+          JSON.parse(window.localStorage.getItem('loggedUser')).username ===
+          blog.user.username
+
+          &&
+
+          <div>
+            <button onClick={clickRemove}>remove</button>
+          </div>
+        }
+
       </div>
-    </div>
-)}
+
+      :
+
+      <div style={blogStyle}>
+        <div>
+          {blog.title} {blog.author}
+          <button onClick={toggledetailVisible}>view</button>
+        </div>
+      </div>
+  )
+}
 
 export default Blog

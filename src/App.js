@@ -40,11 +40,10 @@ const App = () => {
     try {
       const user = await loginService.login({ username, password })
       setUser(user)
+      blogService.setToken(user.token)
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
       setUsername('')
       setPassword('')
-      window.localStorage.setItem(
-        'loggedUser', JSON.stringify(user)
-      )
     } catch (exception) {
       console.log(exception)
       setMessage('wrong username or password')
