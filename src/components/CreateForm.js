@@ -1,7 +1,7 @@
-import { useState } from "react"
-import blogService from "../services/blogs"
+import { useState } from 'react'
+import blogService from '../services/blogs'
 
-const CreateForm = ({setMessage}) => {
+const CreateForm = ({ setMessage }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -18,7 +18,7 @@ const CreateForm = ({setMessage}) => {
     blogService.create(blogJSON)
 
     setMessage(`a new blog "${title}" by "${author}" added`)
-    setTimeout(() => {setMessage('')}, 5000);
+    setTimeout(() => {setMessage('')}, 5000)
 
     setTitle('')
     setAuthor('')

@@ -47,7 +47,7 @@ const App = () => {
     } catch (exception) {
       console.log(exception)
       setMessage('wrong username or password')
-      setTimeout(() => {setMessage('')}, 5000);
+      setTimeout(() => {setMessage('')}, 5000)
     }
   }
 
@@ -76,8 +76,8 @@ const App = () => {
           </div>
           <div>
             password
-            <input type="password" value={password} name="Password" 
-              onChange={ ({target}) => {setPassword(target.value)} }
+            <input type="password" value={password} name="Password"
+              onChange={ ({ target }) => {setPassword(target.value)} }
             />
           </div>
           <button type="submit">login</button>
@@ -100,7 +100,7 @@ const App = () => {
           <button type="submit">logout</button>
         </div>
       </form>
-      
+
       <Togglable expandButtonLable='create new blog' collapseButtonLable='cancel'>
         <CreateForm setMessage={setMessage}></CreateForm>
       </Togglable>
