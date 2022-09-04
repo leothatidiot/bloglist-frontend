@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const Blog = ({ blog, setBlogs }) => {
+const Blog = ({ blog, clickLike, clickRemove }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -16,57 +15,29 @@ const Blog = ({ blog, setBlogs }) => {
     setDetailVisible(!detailVisible)
   }
 
-  const clickLike = async () => {
-    const newBlog = await { ...blog }
-    newBlog.likes += 1
-    delete newBlog.user
-
-    await blogService.update(blog.id, newBlog)
-
-    blogService.getAll().then(blogs => {
-      blogs.sort((a, b) => {
-        if (a.likes < b.likes) return 1
-        else if (a.likes > b.likes) return -1
-        else return 0
-      })
-      setBlogs(blogs)
-    })
-  }
-
-  const clickRemove = async () => {
-    if (window.confirm(`Remove blog "${blog.title}" by "${blog.author}"`)) {
-      await blogService.remove(blog.id)
-      blogService.getAll().then(blogs => {
-        blogs.sort((a, b) => {
-          if (a.likes < b.likes) return 1
-          else if (a.likes > b.likes) return -1
-          else return 0
-        })
-        setBlogs(blogs)
-      })
-    }
-  }
-
   return (
     detailVisible ?
 
-      <div style={blogStyle}>
+      <div style={blogStyle} className="fullContent">
         <div>
-          {blog.title} {blog.author}
-          <button onClick={toggledetailVisible}>view</button>
+          {blog.title} {blog.author} <button onClick={toggledetailVisible}>hide</button>
         </div>
         <div>{blog.url}</div>
-        <div>{blog.likes} <button onClick={clickLike}>like</button></div>
+        <div>
+          {blog.likes} <button onClick={() => clickLike(blog)}>like</button>
+        </div>
         <div>{blog.user.name}</div>
 
         {
-          JSON.parse(window.localStorage.getItem('loggedUser')).username ===
-          blog.user.username
+          JSON.parse(window.localStorage.getItem('loggedUser')) &&
+
+          (JSON.parse(window.localStorage.getItem('loggedUser')).username ===
+          blog.user.username)
 
           &&
 
           <div>
-            <button onClick={clickRemove}>remove</button>
+            <button onClick={() => clickRemove(blog)}>remove</button>
           </div>
         }
 
@@ -74,10 +45,9 @@ const Blog = ({ blog, setBlogs }) => {
 
       :
 
-      <div style={blogStyle}>
+      <div style={blogStyle} className="togglableContent">
         <div>
-          {blog.title} {blog.author}
-          <button onClick={toggledetailVisible}>view</button>
+          {blog.title} {blog.author} <button onClick={toggledetailVisible}>view</button>
         </div>
       </div>
   )

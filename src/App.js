@@ -58,6 +58,48 @@ const App = () => {
     setUser(null)
   }
 
+  const clickLike = async (blog) => {
+    const newBlog = await { ...blog }
+    newBlog.likes += 1
+    delete newBlog.user
+
+    await blogService.update(blog.id, newBlog)
+    const blogs = await blogService.getAll()
+
+    blogs.sort((a, b) => {
+      if (a.likes < b.likes) return 1
+      else if (a.likes > b.likes) return -1
+      else return 0
+    })
+    setBlogs(blogs)
+  }
+
+  const clickRemove = async (blog) => {
+    if (window.confirm(`Remove blog "${blog.title}" by "${blog.author}"`)) {
+      await blogService.remove(blog.id)
+      blogService.getAll().then(blogs => {
+        blogs.sort((a, b) => {
+          if (a.likes < b.likes) return 1
+          else if (a.likes > b.likes) return -1
+          else return 0
+        })
+        setBlogs(blogs)
+      })
+    }
+  }
+
+  const createBlog = async  (blogJSON) => {
+    await blogService.create(blogJSON)
+    blogService.getAll().then(blogs => {
+      blogs.sort((a, b) => {
+        if (a.likes < b.likes) return 1
+        else if (a.likes > b.likes) return -1
+        else return 0
+      })
+      setBlogs(blogs)
+    })
+  }
+
   if (user === null) {
     return (
       <div>
@@ -101,13 +143,13 @@ const App = () => {
         </div>
       </form>
 
-      <Togglable expandButtonLable='create new blog' collapseButtonLable='cancel'>
-        <CreateForm setMessage={setMessage}></CreateForm>
+      <Togglable buttonLable='create new blog'>
+        <CreateForm createBlog={createBlog} setMessage={setMessage} />
       </Togglable>
 
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} setBlogs={setBlogs} />
+          <Blog key={blog.id} blog={blog} clickLike={clickLike} clickRemove={clickRemove} />
         )}
       </div>
 

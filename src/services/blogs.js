@@ -23,7 +23,8 @@ const update = async (blogId, blogJSON) => {
   const config = { // authorization in backend did NOT implement
     headers: { Authorization: token },
   }
-  await axios.put(`${baseUrl}/${blogId}`, blogJSON, config)
+  const response = await axios.put(`${baseUrl}/${blogId}`, blogJSON, config)
+  return response.data
 }
 
 const remove = async (blogId) => {
