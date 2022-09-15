@@ -16,40 +16,41 @@ const Blog = ({ blog, clickLike, clickRemove }) => {
   }
 
   return (
-    detailVisible ?
+    <div className='blog'>
+      {detailVisible
 
-      <div style={blogStyle} className="fullContent">
-        <div>
-          {blog.title} {blog.author} <button onClick={toggledetailVisible}>hide</button>
-        </div>
-        <div>{blog.url}</div>
-        <div>
-          {blog.likes} <button onClick={() => clickLike(blog)}>like</button>
-        </div>
-        <div>{blog.user.name}</div>
-
-        {
-          JSON.parse(window.localStorage.getItem('loggedUser')) &&
-
-          (JSON.parse(window.localStorage.getItem('loggedUser')).username ===
-          blog.user.username)
-
-          &&
-
+        ? <div style={blogStyle} className="fullContent">
           <div>
-            <button onClick={() => clickRemove(blog)}>remove</button>
+            {blog.title} {blog.author} <button onClick={toggledetailVisible}>hide</button>
           </div>
-        }
+          <div>{blog.url}</div>
+          <div>
+            {blog.likes} <button className='likeButton' onClick={() => clickLike(blog)}>like</button>
+          </div>
+          <div>{blog.user.name}</div>
 
-      </div>
+          {
+            JSON.parse(window.localStorage.getItem('loggedUser')) &&
 
-      :
+            (JSON.parse(window.localStorage.getItem('loggedUser')).username ===
+              blog.user.username)
 
-      <div style={blogStyle} className="togglableContent">
-        <div>
-          {blog.title} {blog.author} <button onClick={toggledetailVisible}>view</button>
+            &&
+
+            <div>
+              <button className='removeButton' onClick={() => clickRemove(blog)}>remove</button>
+            </div>
+          }
+
         </div>
-      </div>
+
+        : <div style={blogStyle} className="togglableContent">
+          <div>
+            {blog.title} {blog.author} <button onClick={toggledetailVisible}>view</button>
+          </div>
+        </div>
+      }
+    </div>
   )
 }
 
